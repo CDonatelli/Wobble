@@ -62,8 +62,8 @@ for i = 1:length(DataFile)
             % CHANGE DEPENDING ON NATURE OF TIF FILES
             % 0 if Fish are black, 1 if fish are white
             if DFi(round(perpY(k)), round(Xs(k))) == 0 % where the perp line
-                add = [Xs(k),perpY(k)];      % passes through a black spot
-                Black = [Black; add];           % presumably the fish
+                add = [Xs(k),perpY(k)];        % passes through a black spot
+                Black = [Black; add];          % presumably the fish
             end
         end
         % plot(Black, 'co');

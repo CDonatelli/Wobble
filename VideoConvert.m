@@ -1,4 +1,6 @@
-% script converts a standard .avi video of an object moving on or past
+function VideoConvert()
+
+% script converts an .avi video of an dark object moving on or past
 % a white background to
 %   1. a series of .tif files
 %   2. a series of black & white tif files (black background, white object)
@@ -13,13 +15,14 @@ clear all
 close all
 disp('Hello!');
 disp('Please select the directory containing your video');
-pause(1);
+
 % go to the directory containing the .avi file
 directory = uigetdir;
 cd(directory);
+
 % prompt user to enter name of video
 % user must enter 'name.avi'
-disp('Great! Now type in the name of your video : ');
+disp('Now type in the name of your video : ');
 Vid = input('Name must be in the format "name.avi" (use apostrophe key): ');
 
 SV = VideoReader(Vid); % read in video
@@ -89,6 +92,8 @@ close(video)                   % close the video
 cd ..;
 disp(['Done! Your files are saved in ', DirName]);
 disp('The tiffs folder contains tiff files of the original video');
-disp('The BWtiffs folder contains the black and white .tif tiles ');
+disp('The BWtiffs folder contains the black and white .tif files ');
 disp('and the black and white .avi file');
+
+end
 

@@ -1,3 +1,4 @@
+function PicConvert()
 % script converts color images to black and white contour images
 %
 clear all
@@ -14,7 +15,7 @@ Num = input('What is the format of your photos? :');
 FileNameList = dir(['*.', Num]);         % create a list of the files
 PicNames = cell(length(FileNameList),1); % create a cell array
 mkdir('BWpics')                          % create a directory for BW images
-for j = 1:length(FileNameList);          % put nnames into cell array
+for j = 1:length(FileNameList);          % put names into cell array
     PicNames{j}= FileNameList(j).name;
 end
 
@@ -26,4 +27,6 @@ for i = 1:length(PicNames)               % process images
     cd('BWpics')
     imwrite(FrameOut, ['bw',char(PicNames(i))]); % write image to new dir
     cd ..
+end
+
 end

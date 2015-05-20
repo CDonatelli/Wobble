@@ -212,7 +212,7 @@ end
 function FrameOut = ProcessImage(Frame)
 h = ones(5,5) / 25;     %blur the image to kill line artifacts
 BlurredImage = imfilter(Frame,h);
-CroppedImage = double(BlurredImage);%(65:405,80:660);     %this removes the borders from the images
+%CroppedImage = double(BlurredImage);%(65:405,80:660); %this removes the borders from the images
                                                 % assumes motionscope frame
 Level = graythresh(CroppedImage)*.75;           %set threshold a little darker than the auto computed one
 FrameOut = ~im2bw(CroppedImage,Level);       %make image binary and invert it so fish is white
