@@ -56,18 +56,24 @@ cd(newT)
             end;
         I2 = rect(I1,eye(3),fc,cc,kc,alpha_c,KK);
 
-        if i < 10 
-            imwrite(uint8(round(I2)),gray(256),[Pref, '00000', num2str(i), '.tif']);  % create tif of i-th frame
+        if i < 10
+            imwrite(uint8(round(I2)),gray(256),[Pref, '00000',
+            num2str(i), '.tif']);  % create tif of i-th frame
         elseif i < 100
-            imwrite(uint8(round(I2)),gray(256),[Pref, '0000', num2str(i), '.tif']);  % create tif of i-th frame
+            imwrite(uint8(round(I2)),gray(256),[Pref, '0000', num2str(i),
+            '.tif']);  % create tif of i-th frame
         elseif i < 1000
-            imwrite(uint8(round(I2)),gray(256),[Pref, '000', num2str(i), '.tif']);  % create tif of i-th frame
+            imwrite(uint8(round(I2)),gray(256),[Pref, '000', num2str(i),
+            '.tif']);  % create tif of i-th frame
         elseif i < 10000
-            imwrite(uint8(round(I2)),gray(256),[Pref, '00', num2str(i), '.tif']);  % create tif of i-th frame
+            imwrite(uint8(round(I2)),gray(256),[Pref, '00', num2str(i),
+            '.tif']);  % create tif of i-th frame
         elseif i < 100000
-            imwrite(uint8(round(I2)),gray(256),[Pref, '0', num2str(i), '.tif']);  % create tif of i-th frame
+            imwrite(uint8(round(I2)),gray(256),[Pref, '0', num2str(i),
+            '.tif']);  % create tif of i-th frame
         else
-            imwrite(uint8(round(I2)),gray(256),[Pref, num2str(i), '.tif']);  % create tif of i-th frame
+            imwrite(uint8(round(I2)),gray(256),[Pref, num2str(i),
+            '.tif']);  % create tif of i-th frame
         end
     end
 %-------------------------------------------------------------------------%
@@ -75,7 +81,7 @@ cd ..
 cd ..
 %-------------------------------------------------------------------------%
 % Create undistorted video
-imageNames = dir(fillfile(orig, newT , '*.tif'));    
+imageNames = dir(fullfile(orig, newT , '*.tif'));    
 imageNames = {imageNames.name}';
 
 newVid = VideoWriter(fullfile(pwd, [orig, '_undistorted.avi']));
@@ -90,7 +96,7 @@ open(newVid)
 close(newVid)
 %-------------------------------------------------------------------------%
 % Convert original into .avi format
-imageNames2 = dir(fillfile(orig, oldT , '*.tif'));    
+imageNames2 = dir(fullfile(orig, origT , '*.tif'));    
 imageNames2 = {imageNames2.name}';
 
 newVid2 = VideoWriter(fullfile(pwd, [orig, '_fixed.avi']));
