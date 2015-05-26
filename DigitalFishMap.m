@@ -1,4 +1,4 @@
-function [ ] = DigitalFishMap(vid, FishLength, Dpoints, FishPoints)%, calib)
+function [SV] = DigitalFishMap(vid, FishLength, Dpoints, FishPoints)%, calib)
 % Dx, Dy, Dz = Digital fish ellipse coordinates (deleted, do I need this?)
 % vid = the video you want to map to
 % Dpoints = the coordinates of the nose and tail of the fish for each frame
@@ -55,12 +55,13 @@ function [ ] = DigitalFishMap(vid, FishLength, Dpoints, FishPoints)%, calib)
            % plot the 2D projection
            % need to correct for camera paramaters before plotting
            % How? Projection matrix
-           % 
+           
            plot(Fx, Fy)
+           
            % Insert While loop here
            % While plot is not aligned with the fish, continue
            % Look for parts of the image different from background
-           % In my case, fish will be dark, the backgrounf will be light
+           % In my case, fish will be dark, the background will be light
            
            
        end
