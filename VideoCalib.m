@@ -9,14 +9,14 @@ cd(directory);
 % prompt user to enter name of video
 % user must enter 'name.avi'
 disp('Type in the name of your video file : ');
-Vid = input('Name must be in the format "name.avi" (use apostrophe key): ');
+Vid = input('Name must be in the format ''name.avi'' : ');
 
 SV = VideoReader(Vid); % read in video
 dirName=[Vid,'Tiffs']; % create directory name
 mkdir(dirName); cd(dirName); % create and go to new directory
 
 disp('Enter the prefix you want your tif files to have.');
-Pref = input('Prefix must be in the format "prefix" (use apostrophe key):');
+Pref = input('Prefix must be in the format ''prefix'':');
 FrNum = SV.NumberOfFrames;
 
     for i = 1:FrNum

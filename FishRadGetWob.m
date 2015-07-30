@@ -1,4 +1,4 @@
-function [] = FishRadGetWob(DataFile, ImageFile);
+function Thickness = FishRadGetWob(DataFile, ImageFile);
 % First run MidlineCust and VideoConvert
 % The structure file created by MidlineCust and the black and white tif
 % files should be in the MATLAB workspace before running FishRadGet
@@ -75,4 +75,6 @@ for i = 1:length(DataFile)
 end
 eval(sprintf('%s=%s',[ImageFile,'Thk'],'Thickness'));       % rename output
 save([ImageFile,'Thk.mat'],[ImageFile, 'Thk']);         % save midline data
+
+end
 

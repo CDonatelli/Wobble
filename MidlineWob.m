@@ -1,4 +1,4 @@
-function Lines = MidlineCust(FileNamePrefix)
+function Lines = MidlineWob(FileNamePrefix)
 %   finds the midline of a fish swimming across the field of view.  Counts
 %   on good contrast and low background noise. Dark fish on light
 %   background is required
@@ -12,10 +12,10 @@ function Lines = MidlineCust(FileNamePrefix)
 %2. stats on waves
 %
 
-disp('Please select the directory containing your tif files');
-pause(0.5);
-directory = uigetdir; % go to the directory containing the .avi file
-cd(directory);
+% disp('Please select the directory containing your tif files');
+% pause(0.5);
+% directory = uigetdir; % go to the directory containing the .avi file
+% cd(directory);
 
 FileNameList = dir([FileNamePrefix '*.tif']);   %assume tif files
 Lines.Frame = [];
@@ -24,11 +24,11 @@ X=[];
 Y=[];
 
 for Index = 1:size(FileNameList,1)
-    RawImage = imread(FileNameList(Index).name);    %get the first image to allow user to click the fish    
+    RawImage = imread(FileNameList(Index).name);%get the first image to allow user to click the fish    
     BinaryImage = ProcessImage(RawImage);       %blur the image, threshold and invert
     LabelImage = bwlabeln(BinaryImage,4);       %label the image to use image props          
     imshow(BinaryImage);
-    ImageStats = regionprops(LabelImage,'all');   %get stats on the labelled image
+    ImageStats = regionprops(LabelImage,'all'); %get stats on the labelled image
 
     %if this is the first frame then get teh nose, otherwise use teh front
     %point from the last image as teh temporary nose.
