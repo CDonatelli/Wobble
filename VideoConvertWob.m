@@ -60,7 +60,7 @@ VD = dir; DirName = VD.name;
 close all
     for i = 1:FrNum
         img = read(SV,i);   % read in i-th frame of video
-        cd('tiffs');        % move to tif folder
+        cd([Vid,'_tiffs']);        % move to tif folder
         if i < 10                                % create tif of i-th frame
             imwrite(img,[Pref, '000', num2str(i), '.tif']);  
         elseif i < 100                           % create tif of i-th frame
@@ -74,12 +74,12 @@ close all
         h = ones(5,5)/25; Blur = imfilter(img,h);
         lev = graythresh(Blur)*0.75;
         frg = ~im2bw(Blur,lev);
-        cd('BWtiffs');                     % move to directory for bw files
+        cd([Vid,'_BWtiffs']);                      % move to directory for bw files
         imwrite(frg,['bw',Pref,num2str(i),'.tif']);% create tif of bw frame
         cd ..;                                     % move to main directory
     end
     
-cd('BWtiffs')
+cd(Vid,'_BWtiffs')
 video = VideoWriter(['BW',Vid]); % create a new video
 open(video);                     % open video for modification
 for i = 1:FrNum                  % create an array of strings containing 

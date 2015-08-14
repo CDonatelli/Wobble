@@ -1,18 +1,17 @@
 function [ ] = Wobble( )
-disp('Please be sure you have the following in one folder')
-disp('1 : Video of your fish');
-disp('2 : A dorsal view photo of your fish');
-disp('3 : A lateral view photo of your fish');
+waitfor(msgbox(['Please be sure you have the following in one folder: ', ...
+            '1 - Video of your fish, ', ...
+            '2 - A dorsal view photo of your fish ', ...
+            '3 : A lateral view photo of your fish']));
 
-disp('Please select the directory containing Video file and image files');
-pause(0.5);
+waitfor(msgbox('Please select the directory containing Video file and image files'));
 directory = uigetdir; % go to the directory containing the .avi file
 cd(directory);
 
 Vid = input('Please enter the name of your video :', 's');
 
 FileNamePrefix = VideoConvertWob(Vid);
-PicConvert();
+PicConvertWob();
 
 disp('Please select the directory containing your b&w tif files');
 pause(0.5);

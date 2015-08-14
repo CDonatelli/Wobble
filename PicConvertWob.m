@@ -11,8 +11,9 @@ function PicConvertWob()
 % cd(directory);
 
 % prompt user to enter format of photos. must enter as '.format'
-Num = menu('What is the format of your photos?', 'tif', 'jpg', 'png', 'gif');
-FileNameList = dir(['*.', Num]);         % create a list of the files
+Choice = menu('What is the format of your photos?', 'tif', 'jpg', 'png', 'gif');
+Fmts = {'tif', 'jpg', 'png', 'gif'};
+FileNameList = dir(['*.', char(Fmts(Choice))]);         % create a list of the files
 PicNames = cell(length(FileNameList),1); % create a cell array
 % mkdir('BWpics')                          % create a directory for BW images
 for j = 1:length(FileNameList);          % put names into cell array
