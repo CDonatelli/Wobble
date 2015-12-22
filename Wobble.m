@@ -18,7 +18,7 @@ pause(0.5);
 directory = uigetfdir;
 cd(directory);
 
-Midlines = MidlineWob (FileNamePrefix);
+Midlines = MidlineWob(FileNamePrefix);
 SWthk = FishRadGetWob(Midlines, FileNamePrefix);
 
 h = msgbox('Select the Dorsal View image of your fish');

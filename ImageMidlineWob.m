@@ -1,28 +1,35 @@
 function Centers = ImageMidlineWob(View)
 %     View = input('Please enter the name of the image view. :');
-    DVin = imread(View); Lev = graythresh(DVin)*.75; DV = im2bw(DVin, Lev);
-    imshow(DV); hold on
+    DVin = imread(View);
+    BinaryImage = ProcessImage(DVin);
+    LabelImage = bwlabeln(BinaryImage,4);
+    imshow(BinaryImage);
+    hold on
+    ImageStats = regionprops(LabelImage,'all');
     [X, Y] = ginput(1);
-    Radius = RadFind(DV,X,Y);
-    FishRegion = DV(round(Y),round(X));
-    ImageStats = regionprops(DV,'all');
+    plot(X,Y,'or');
+    FishRegion = LabelImage(round(Y),round(X));
+    
     XTemp=ImageStats(FishRegion).Centroid(1)-X;
     YTemp=ImageStats(FishRegion).Centroid(2)-Y;
     [AngleToNext,D] = cart2pol(XTemp, YTemp);
+    
+    Radius = RadFind(BinaryImage,X,Y);
+    
     %find a center for the drawn circle that is 2*Radius in the opposite
     %direction from the centroid
     [TempCenter(1), TempCenter(2)] = pol2cart(AngleToNext+pi,2*Radius);
     TempCenter(1) = TempCenter(1)+X;
     TempCenter(2) = TempCenter(2)+Y;
-%    plot(TempCenter(1),TempCenter(2),'og');
+    plot(TempCenter(1),TempCenter(2),'og');
 
     FullArc = GetArc(TempCenter(1),TempCenter(2),3*Radius,AngleToNext-pi/2,AngleToNext+pi/2);     %180 degrees of arc centered on the user point
-%    plot(FullArc(:,1),FullArc(:,2),'.r');   %shows arc that crosses fish body posterior to current point 
-    
-    FullArc = TrimArc(DV,FullArc);           % removes out of bounds values
-    FishArc = FindWhite(DV,FullArc);   %narrow list points to those on fish
+    plot(FullArc(:,1),FullArc(:,2),'.r');   %shows arc that crosses fish body posterior to current point 
+    hold on
+    FullArc = TrimArc(BinaryImage,FullArc);           % removes out of bounds values
+    FishArc = FindWhite(BinaryImage,FullArc);   %narrow list points to those on fish
     Centers=[X, Y];                   %first point of midline is user point
-    Centers = FindMidPoint(DV,FishArc,Centers);    %get the rest of midline
+    Centers = FindMidPoint(BinaryImage,FishArc,Centers);    %get the rest of midline
     View(end-3:end) = [];                 % delete '.avi' from the filename
     View(1:2) = [];                         % delete 'bw' from the filename
     eval(sprintf('%s=%s',[View,'Mds'],'Centers'));          % rename output
@@ -31,7 +38,14 @@ function Centers = ImageMidlineWob(View)
 figure
 hold on
 
-
+function FrameOut = ProcessImage(Frame)
+h = ones(5,5) / 25;     %blur the image to kill line artifacts
+BlurredImage = imfilter(Frame,h);
+%CroppedImage = double(BlurredImage);%(65:405,80:660); %this removes the borders from the images
+                                                % assumes motionscope frame
+Level = graythresh(BlurredImage)*1.25;           %set threshold a little darker than the auto computed one
+FrameOut = im2bw(BlurredImage,Level);       %make image binary and invert it so fish is white
+ 
 function Centers = FindMidPoint(FishImage,FishArc,Centers)
 if size(FishArc,1)>1
     MidPoint = FishArc(floor(size(FishArc,1)/2),:);  %the midpoint

@@ -1,4 +1,6 @@
-function [] = FishRadGetWob(DataFile, ImageFile);
+ function [indpeak,confpeak,per,amp,midx,midy,...
+           exc,wavevel,wavelen,waver,waven,...
+           dValues,wobble,tWob]                   = vidInfo(struct)
 % First run MidlineCust and VideoConvert
 % The structure file created by MidlineCust and the black and white tif
 % files should be in the MATLAB workspace before running FishRadGet

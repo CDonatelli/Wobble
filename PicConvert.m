@@ -22,7 +22,7 @@ end
 for i = 1:length(PicNames)               % process images
     Pic = imread(char(PicNames(i)));             % read in image
     h = ones(5,5) / 25; BlurIm = imfilter(Pic,h);% blur image
-    Level = graythresh(BlurIm)*.75;              % determine level of background
+    Level = graythresh(BlurIm);              % determine level of background
     FrameOut = ~im2bw(BlurIm,Level);             % convert the image to BW
     cd('BWpics')
     imwrite(FrameOut, ['bw',char(PicNames(i))]); % write image to new dir
