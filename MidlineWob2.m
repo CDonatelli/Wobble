@@ -235,12 +235,12 @@ h = ones(5,5) / 25;     %blur the image to kill line artifacts
 BlurredImage = imfilter(Frame,h);
 %CroppedImage = double(BlurredImage);%(65:405,80:660); %this removes the borders from the images
                                                 % assumes motionscope frame
-Level = graythresh(BlurredImage);           %set threshold a little darker than the auto computed one
+Level = graythresh(BlurredImage)*.95;           %set threshold a little darker than the auto computed one
 FrameOut = ~im2bw(BlurredImage,Level);       %make image binary and invert it so fish is white
-FrameOut(1,:) = [];
-FrameOut(end-1:end,:) = [];
-FrameOut(:,1) = [];
-FrameOut(:,end) = [];
+FrameOut(1:3,:) = [];
+FrameOut(end-2:end,:) = [];
+FrameOut(:,1:3) = [];
+FrameOut(:,end-2:end) = [];
 
   
 %this makes sure that none of the values in an arc point to locations that

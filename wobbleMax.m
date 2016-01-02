@@ -4,15 +4,18 @@ function sOut = wobbleMax(struct)
     wobble = struct.wobble;
     
     [m,n] = size(tWob);
-    tMax = [];
+    tMean = [];
     pct = [];
+    med = [];
     for i = 1:m
         f = findpeaks(tWob(i,:));
-        tMax = [tMax;mean(f)];
+        tMean = [tMean;mean(f)];
         p = prctile(f,90);
         pct = [pct;p];
+        m = median(f);
+        med = [med;m];
     end
-    sOut.tMax = [tMax, pct];  
+    sOut.tMax = [tMean, med, pct];  
 
     [m,n] = size(wobble);
     wMax = [];
