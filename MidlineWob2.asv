@@ -338,8 +338,8 @@ function [Back, Obj] = GetLevels(im)
         MaxObj = MaxObj + ((MinObj-MaxBac)/2);
     end
     if MinBac > MaxObj
-        MaxObj = MaxObj + ((MinBac-MaxObj)/2);
-        MinObj = MinObj - ((MinBac-MaxObj)/2);
+        MaxObj = MaxObj - ((MinBac-MaxObj)/2);
+        MinObj = MinObj - 
     end
     
     hold off

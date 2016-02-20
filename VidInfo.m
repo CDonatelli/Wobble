@@ -63,6 +63,9 @@ function sOut = VidInfo(struct)
 %         plot(Xt,Yt,'ro');       % plot the twist points
 %            [Ds Ws] = findDvalues(XF,YF,frame,level, imDvalues);
         [TDs, TWs] = findDvalues(Xt,Yt,frame,level,imTDvals,VidScale);
+        TWs(TWs<0) = 0; % replace negative values with 0 for now
+                        % will need to fix algorithm later
+                        
 %         sOut.dValues = [sOut.dValues, Ds]; 
 %         sOut.wobble = [sOut.wobble, Ws];
         sOut.tDvals  = [sOut.tDvals, TDs];   
@@ -117,8 +120,14 @@ function [dValues,wobble] = findDvalues(XF,YF,frame,level,imDvalues,scale)
             plot(Fish(:,1), Fish(:,2), 'c');
             d = sqrt((Fish(end,1)-Fish(1,1))^2 ... 
                     +(Fish(end,2)-Fish(1,2))^2) * scale;
-            w =       (d - imDvalues(j,1))/...
-                 (imDvalues(j,2) - imDvalues(j,1));
+            if imDvalues(j,1) < imDvalues(j,2)
+                w =       (d - imDvalues(j,1))/...
+                     (imDvalues(j,2) - imDvalues(j,1));
+            else
+                w = 1-(       (d - imDvalues(j,1))/...
+                        (imDvalues(j,2) - imDvalues(j,1))...
+                       );                
+            end
         else
             d = 0;
             w = 0;

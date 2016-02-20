@@ -64,7 +64,7 @@ function [sOut] = imageInfo(struct)
     LDV = imageDvals(sOut.lMidRes(:,1), sOut.lMidRes(:,2),LV);
     dTV = imageDvals(sOut.dImTwist(:,1),sOut.dImTwist(:,2),DV);
     lTV = imageDvals(sOut.lImTwist(:,1),sOut.lImTwist(:,2),LV);
-    sOut.imTwistD = [dTV',lTV'];
+    sOut.imDTwist = [dTV',lTV'];
     sOut.imD = [DDV', LDV'];
     
 
