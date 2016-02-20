@@ -5,6 +5,7 @@ function [sOut] = imageInfo(struct)
     DV = struct.dorsalIm;
     len = struct.fishLength;
     twist = struct.twistPts./len;
+    tail = struct.tailPts./len;
     % Get a rectangle to limit search area to area the fish is swimming in
 %     Drect = CropVideo(DV);
 %     Lrect = CropVideo(LV);
@@ -59,13 +60,34 @@ function [sOut] = imageInfo(struct)
     sOut.lImTwist = [sOut.lMidRes(1,:);
                           LX',LY';
                      sOut.lMidRes(20,:)];
+    %redefine as empty just in case length(twist) > length(tail)
+    Dcordinate = []; Lcordinate = [];
+    DX = []; DY = []; LX = []; LY = [];
+    for j = 1:length(tail)
+        Dcordinate = Dfun(tail(j));
+        Lcordinate = Lfun(tail(j));
+        DX(j) = Dcordinate(1);
+        DY(j) = Dcordinate(2);
+        LX(j) = Lcordinate(1);
+        LY(j) = Lcordinate(2);
+    end    
+    sOut.dImTail = [sOut.dMidRes(1,:); 
+                          DX',DY';
+                     sOut.dMidRes(20,:)];
+    sOut.lImTail = [sOut.lMidRes(1,:);
+                          LX',LY';
+                     sOut.lMidRes(20,:)];
 
-    DDV = imageDvals(sOut.dMidRes(:,1), sOut.dMidRes(:,2),DV);
-    LDV = imageDvals(sOut.lMidRes(:,1), sOut.lMidRes(:,2),LV);
-    dTV = imageDvals(sOut.dImTwist(:,1),sOut.dImTwist(:,2),DV);
-    lTV = imageDvals(sOut.lImTwist(:,1),sOut.lImTwist(:,2),LV);
+    DDV  = imageDvals(sOut.dMidRes(:,1), sOut.dMidRes(:,2),DV);
+    LDV  = imageDvals(sOut.lMidRes(:,1), sOut.lMidRes(:,2),LV);
+    dTV  = imageDvals(sOut.dImTwist(:,1),sOut.dImTwist(:,2),DV);
+    lTV  = imageDvals(sOut.lImTwist(:,1),sOut.lImTwist(:,2),LV);
+    dTlV = imageDvals(sOut.dImTail(:,1),sOut.dImTail(:,2),DV);
+    lTlV = imageDvals(sOut.lImTail(:,1),sOut.lImTail(:,2),LV);
     sOut.imDTwist = [dTV',lTV'];
-    sOut.imD = [DDV', LDV'];
+    sOut.imDTail  = [dTlV',lTlV'];
+    sOut.imD      = [DDV', LDV'];
+    
     
 
 function midline = FindMidline(im, rect, FishLev)

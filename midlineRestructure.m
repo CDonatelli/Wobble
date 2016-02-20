@@ -6,6 +6,7 @@ function sOut = midlineRestructure(struct)
 %     end
     twist = struct.twistPts;
     fishlen = struct(1).fishLength;
+    tail = struct.tailPts ./fishlen;
     twist = twist./fishlen;  % scale to fish length 
                                     % interparc funct needs values from 0-1
                                     % representing percentage down the
@@ -14,6 +15,7 @@ function sOut = midlineRestructure(struct)
     mids = struct.midLines;
     nfr = length(mids);
     x = []; y = []; twistPtCordsX = []; twistPtCordsY = [];
+    tailPtCordsY = []; tailPtCordsX = [];
     for i = 1:nfr
 %         if length(mids(i).MidLine) == npts
 %             x = [x, mids(i).MidLine(:,1)];
@@ -32,9 +34,17 @@ function sOut = midlineRestructure(struct)
             twistPtCordsX(j,i) = cordinate(1);
             twistPtCordsY(j,i) = cordinate(2);
         end
+        
+        for j = 1:length(tail)
+            cordinate = funct(tail(j));
+            tailPtCordsX(j,i) = cordinate(1);
+            tailPtCordsY(j,i) = cordinate(2);
+        end
     end
     sOut.twistPtCordsX = twistPtCordsX;
     sOut.twistPtCordsY = twistPtCordsY;
+    sOut.tailPtCordsX = tailPtCordsX;
+    sOut.tailPtCordsY = tailPtCordsY;
     sOut.X = x; sOut.Y = y;
     fr = 120;
     total = nfr/fr; 

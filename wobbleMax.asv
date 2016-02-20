@@ -1,7 +1,7 @@
 function sOut = wobbleMax(struct)
     sOut = struct;
     tWob = struct.tWob;
-    tLWob = struct.tLWob;
+    tLWob = struct.tLWob
     wobble = struct.wobble;
     
     [m,n] = size(tWob);
@@ -16,16 +16,16 @@ function sOut = wobbleMax(struct)
     end
     sOut.tMax = [tMean, med, pct];  
 
-    [m,n] = size(tLWob);
-    tLMax = []; pct = []; med = [];
+    [m,n] = size(wobble);
+    wMax = []; pct = []; med = [];
     for i = 1:m
-        f = findpeaks(tLWob(i,:));
+        f = findpeaks(wobble(i,:));
         p = prctile(f,90);
-        tLMax = [tLMax;mean(f)];
+        wMax = [wMax;mean(f)];
         pct = [pct;p];
         med = [med;m];
     end
-    sOut.tLMax = [tLMax, pct, med]; 
+    sOut.tLMax = [wMax, pct, med]; 
     
     [m,n] = size(wobble);
     wMax = []; pct = []; med = [];

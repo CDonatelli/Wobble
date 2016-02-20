@@ -1,9 +1,9 @@
 function sOut = VidInfo(struct)
     sOut = struct;
     % dValues,wobble,tDvals,tWob
-    disp('Please select the directory holding your video.');
-    direct = uigetdir;
-    cd(direct);
+%     disp('Please select the directory holding your video.');
+%     direct = uigetdir;
+%     cd(direct);
     Vid = VideoReader(struct.vid);
     FrNum = Vid.NumberOfFrames;
     FrNum = floor(FrNum/5);
@@ -18,6 +18,7 @@ function sOut = VidInfo(struct)
     len = struct.fishLength;
     imDvalues = struct.imD;
     imTDvals = struct.imDTwist;
+    imTLDvals = struct.imDTail;
 % DataFile = input('What is the name of the structure file? :');
 % ImageFile = input('What is the prefix of the image files? :');
 % Format = input('What is the format of the image? :');
@@ -33,10 +34,15 @@ function sOut = VidInfo(struct)
     twistPts = struct.twistPts;
     twistX = struct.twistPtCordsX;
     twistY = struct.twistPtCordsY;
+    tailPts = struct.tailPts;
+    tailX = struct.tailPtCordsX;
+    tailY = struct.tailPtCordsY;
     sOut.dValues = [];
     sOut.wobble = [];
     sOut.tDvals  = [];   
     sOut.tWob = [];
+    sOut.tLDvals = [];
+    sOut.tLWob = [];
     % getting the scale using body length
     [m,n] = size(X);
     arclen = [];
@@ -49,13 +55,20 @@ function sOut = VidInfo(struct)
     sOut.ImScale = ImScale; sOut.VidScale = VidScale;
     imDvalues = imDvalues.*ImScale;
     imTDvals = imTDvals.*ImScale;
+    imTLDvals = imTLDvals.*ImScale;
     for i = 1:length(fr)
         disp(['frame = ',num2str(fr(i))]);
         % Thickness(i).Frame = DataFile(i).Frame;
         XF = X(:,fr(i)); YF = Y(:,fr(i));
+        
         Xt = twistX(:,fr(i)); Yt = twistY(:,fr(i));
         Xt = [XF(1,:); Xt; XF(end,:)];
-        Yt = [YF(1,:); Yt; YF(end,:)]; 
+        Yt = [YF(1,:); Yt; YF(end,:)];
+        
+        XtL = tailX(:,fr(i)); YtL = tailY(:,fr(i));
+        XtL = [XF(1,:); XtL; XF(end,:)];
+        YtL = [YF(1,:); YtL; YF(end,:)];
+        
         frame = read(Vid,fr(i));
         frame = imcrop(frame,rect);
         imshow(frame); hold on  % show the image
@@ -63,13 +76,22 @@ function sOut = VidInfo(struct)
 %         plot(Xt,Yt,'ro');       % plot the twist points
 %            [Ds Ws] = findDvalues(XF,YF,frame,level, imDvalues);
         [TDs, TWs] = findDvalues(Xt,Yt,frame,level,imTDvals,VidScale);
-        TWs(TWs<0) = 0; % replace negative values with 0 for now
-                        % will need to fix algorithm later
-                        
+        TWs(TWs<0) = 0;     % replace negative values with 0 for now
+                            % will need to fix algorithm later
+        
+        imshow(frame); hold on
+        [TLDs, TLWs] = findDvalues(XtL,YtL,frame,level,imTLDvals,VidScale);
+        TLWs(TLWs<0) = 0;   % replace negative values with 0 for now
+                            % will need to fix algorithm later
+                            
 %         sOut.dValues = [sOut.dValues, Ds]; 
 %         sOut.wobble = [sOut.wobble, Ws];
         sOut.tDvals  = [sOut.tDvals, TDs];   
         sOut.tWob = [sOut.tWob, TWs];
+        sOut.tLDvals  = [sOut.tLDvals, TLDs];   
+        sOut.tLWob = [sOut.tLWob, TLWs];
+        
+        
     end
     
 function [dValues,wobble] = findDvalues(XF,YF,frame,level,imDvalues,scale)

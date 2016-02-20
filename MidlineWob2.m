@@ -121,7 +121,7 @@ for Index = 1:size(Lines,2)
     %fprintf(output, '%f %f\n',
 end
 sOut.midLines = Lines;
-save([FileNamePrefix.Name, 'Mds'], 'Lines');
+%save([FileNamePrefix.Name, 'Mds'], 'Lines');
 
 %this finds a radius of a circle centered on a point that overlaps both
 %sides of the fish. written by Cassandra Donatelli 2014
