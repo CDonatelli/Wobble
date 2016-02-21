@@ -23,6 +23,7 @@ function sOut = wobbleMax(struct)
         p = prctile(f,90);
         tLMax = [tLMax;mean(f)];
         pct = [pct;p];
+        m = median(f);
         med = [med;m];
     end
     sOut.tLMax = [tLMax, pct, med]; 
@@ -34,6 +35,7 @@ function sOut = wobbleMax(struct)
         p = prctile(f,90);
         wMax = [wMax;mean(f)];
         pct = [pct;p];
+        m = median(f);
         med = [med;m];
     end
     sOut.wMax = [wMax, pct, med];  
