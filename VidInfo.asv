@@ -7,7 +7,7 @@ function sOut = VidInfo(struct)
     Vid = VideoReader(struct.vid);
     FrNum = Vid.NumberOfFrames;
     
-    if FrNum > 100 % stupid way to get every 5th frame. fix later
+    if FrNum > 150
         FrNum = floor(FrNum/5);
         fr = 1;
         for i = 2:FrNum
