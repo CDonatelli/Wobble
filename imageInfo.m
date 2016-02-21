@@ -1,11 +1,13 @@
 function [sOut] = imageInfo(struct)
     sOut = struct;
     %FrNum = Vid.NumberOfFrames;
+    perc = [0.5,0.6,0.7,0.8,0.9];
     LV = struct.lateralIm;
     DV = struct.dorsalIm;
     len = struct.fishLength;
+    sOut.tailPts = len.*perc;
     twist = struct.twistPts./len;
-    tail = struct.tailPts./len;
+    tail = sOut.tailPts./len;
     % Get a rectangle to limit search area to area the fish is swimming in
 %     Drect = CropVideo(DV);
 %     Lrect = CropVideo(LV);
