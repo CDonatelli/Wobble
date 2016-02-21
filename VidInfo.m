@@ -14,7 +14,7 @@ function sOut = VidInfo(struct)
             fr = [fr;fr(i-1)+5];
         end
     else
-        fr = FrNum;
+        fr = linspace(1,FrNum,FrNum);
     end
     ImStart = read(Vid,1);
     rect = struct.rect;
