@@ -7,27 +7,28 @@ function [ list, time, errors] = WobbleBatch( file )
     for i = 1:length(list)
            t = [];  tic
        try
-           list(i).name = midlineRestructure(eval(list(i).name));
+           NameStr = list(i).name;
+           Struct = midlineRestructure(eval(list(i).name));
            disp(['Ran MidRes ', num2str(i), ' out of ', num2str(length(list))]);
-           save([list(i).name,'Proc.mat'], list(i).name);
+           save([NameStr,'Proc.mat'], 'Struct');
 %        catch
 %            warning(['midlineRestructure did not run for file #' num2str(i)])
 %            errors.(eval(list(i).name)) = getReport(MEexception.last);
 %        end
            t = toc;  tic
 %        try
-           list(i).name = VidInfo(list(i).name);
+           Struct = VidInfo(list(i).name);
            disp(['Ran VidInfo ', num2str(i), ' out of ', num2str(length(list))]);
-           save([list(i).name,'Proc.mat'], list(i).name,'-append');
+           save([NameStr,'Proc.mat'], 'Struct','-append');
 %        catch
 %            warning(['VidInfo did not run for file #' num2str(i)])
 %            errors.(eval(list(i).name)) = getReport(MEexception.last);
 %        end
            t = [t;toc];  tic
 %        try
-           list(i).name = wobbleMax(list(i).name);
+           Struct = wobbleMax(list(i).name);
            disp(['Ran WobMax ', num2str(i), ' out of ', num2str(length(list))]);
-           save([list(i).name,'Proc.mat'], list(i).name,'-append');
+           save([NameStr,'Proc.mat'], 'Struct','-append');
 %        catch
 %            warning(['wobbleMax did not run for file #' num2str(i)])
 %            errors.(eval(list(i).name)) = getReport(MEexception.last);
