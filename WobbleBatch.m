@@ -3,6 +3,8 @@ function [ list, time, errors] = WobbleBatch( file )
     clear file
     list = whos;
     time = [];
+    errors = struct;
+    erorrs.start = 'empty';
     % a = imageInfo(eval(a(1).name))
     for i = 1:length(list)
            t = [];  tic
@@ -28,12 +30,14 @@ function [ list, time, errors] = WobbleBatch( file )
 %        try
            Struct = wobbleMax(Struct);
            disp(['Ran WobMax ', num2str(i), ' out of ', num2str(length(list))]);
+           t = [t;toc];
+           Struct.RunTime = t;
            save([NameStr,'Proc.mat'], 'Struct','-append');
 %        catch
 %            warning(['wobbleMax did not run for file #' num2str(i)])
 %            errors.(eval(list(i).name)) = getReport(MEexception.last);
 %        end
-           t = [t;toc];
+           
        catch err
            errors.(NameStr) = getReport(err);
        end
