@@ -12,7 +12,10 @@ name.lateralIm = imread(lImName);
 name.fishLength = input('What is the length of the fish?: ');
 name.twistPts = input('Enter the twisting points ([paste]): ');
 cd(currentFolder);
-save(nameString);
+
+name = ImageInfo(name);
+
+save(nameString, 'name');
 
     for i = 1:videos
         Struct = name;
