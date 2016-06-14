@@ -13,7 +13,7 @@ name.fishLength = input('What is the length of the fish?: ');
 name.twistPts = input('Enter the twisting points ([paste]): ');
 cd(currentFolder);
 
-name = ImageInfo(name);
+name = imageInfo(name);
 
 save(nameString, 'name');
 

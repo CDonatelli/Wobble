@@ -235,7 +235,7 @@ h = ones(5,5) / 25;     %blur the image to kill line artifacts
 BlurredImage = imfilter(Frame,h);
 %CroppedImage = double(BlurredImage);%(65:405,80:660); %this removes the borders from the images
                                                 % assumes motionscope frame
-Level = graythresh(BlurredImage)*.85;           %set threshold a little darker than the auto computed one
+Level = graythresh(BlurredImage)*.8;           %set threshold a little darker than the auto computed one
 FrameOut = ~im2bw(BlurredImage,Level);       %make image binary and invert it so fish is white
 FrameOut(1:3,:) = [];
 FrameOut(end-2:end,:) = [];
@@ -281,6 +281,7 @@ function rect = CropVideo(im)
 function [Back, Obj] = GetLevels(im)
     OBlu = []; BBlu = [];
     imshow(im); hold on
+    disp('Get Fish Levels');
     [Xo Yo] = getpts();
     plot(Xo,Yo,'bo');
     hold on
@@ -288,6 +289,7 @@ function [Back, Obj] = GetLevels(im)
         O = impixel(im,Xo(i),Yo(i));
         OBlu = [OBlu,O(3)];
     end
+    disp('Get background Levels');
     [Xb Yb] = getpts(1);
     plot(Xb,Yb,'ro');
     hold on
