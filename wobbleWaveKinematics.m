@@ -9,13 +9,19 @@ function [Struct] = wobbleWaveKinematics(Struct, varargin)
     time2 = Struct.time2;
     midlines = Struct.midLines;
     
+    % load peak amplitudes
     twistPeaks = Struct.twistPeaks;
-    twistPeakT = Struct.twistPeakT;
     wobTwistPk = Struct.wobTwistPk;
-    wobTwistT = Struct.wobTwistT;
     tailPeaks = Struct.tailPeaks;
-    tailPeakT = Struct.tailPeakT;
     wobTailPk = Struct.wobTailPk;
+    % deal with values greater then 1
+    wobTwistPk = replaceOnes(wobTwistPk);
+    wobTailPk = replaceOnes(wobTailPk);
+    
+    % load times
+    twistPeakT = Struct.twistPeakT;
+    wobTwistT = Struct.wobTwistT;
+    tailPeakT = Struct.tailPeakT;
     wobTailT = Struct.wobTailT;
     
     tailAmps = [];
@@ -75,7 +81,7 @@ function [Struct] = wobbleWaveKinematics(Struct, varargin)
     Struct.bendingAmp = median(tailAmps);
     Struct.bendingAmps = tailAmps;
     
-    %%%%%%%%%%%%%%%%%%% --- WOBBLE --- %%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%% --- WOBBLE --- %%%%%%%%%%%%%%%%%%% 
     p = polyfit(time2, tailWob(5,:),1);
     yT = p(1).*(wobTailT(:,5)) + p(2);
     amps = wobTailPk(:,5) - yT;
@@ -105,6 +111,27 @@ function [Struct] = wobbleWaveKinematics(Struct, varargin)
     
 end
 
+function [broken] = replaceOnes(broken)
+    [m,n] = size(broken);
+    for i = 1:n
+        col = broken(:,i);
+        notOne = col<1 & col>0;
+        if any(col > 1)
+            One = col > 1;
+            replace = median(col(notOne));
+            col(One) = replace;
+            broken(:,i) = col;
+        elseif any(col > 1) && isempty(notOne)
+            One = col > 0;
+            nextCol = broken(:,i+1);
+            nextNotOne = nextCol<1 & nextCol>0;
+            replace = median(nextCol(nextNotOne));
+            col(One) = replace;
+            broken(:,i) = col;
+        else
+        end
+    end
+end
 %%%%%%%%%%%%%%%%%%%% RUNNING THE CODE FOR A.FLAV
 % load('Aflav2_1.mat')
 % Struct = wobbleWaveKinematics(Struct,'Aflav2_1.mat');

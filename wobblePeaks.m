@@ -194,7 +194,7 @@ function [k,p] = correctPeakFinder(k,p,X,Y,Title)
     BoxName = 'FindPeak Error correction';
     default = {'0','0'};
     answer = inputdlg(prompt, BoxName,1,default);
-    answer = str2num(cell2mat(answer));
+    answer = str2double(answer);
     % if the user needs to eliminate points
     if answer(1) ~= 0
         % to eliminate peaks

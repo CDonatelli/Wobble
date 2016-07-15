@@ -1,4 +1,4 @@
-function [time, errors] = wobblePeaksBatch()
+function [time, errors] = wobbleWaveKinematicsBatch()
     time = [];
     errors = struct;
     erorrs.start = 'empty';
@@ -9,9 +9,11 @@ function [time, errors] = wobblePeaksBatch()
            NameStr = list(i).name;
            Struct = load(NameStr);
            Struct = Struct.Struct;
-           if isfield(Struct,'wobTailT') == 1
+           if isfield(Struct,'wobblwAmps') == 1
+                disp([NameStr, ' has already been analyzed.']);
            else
-                Struct = wobblePeaks(Struct, NameStr);
+                disp(NameStr);
+                Struct = wobbleWaveKinematics(Struct, NameStr);
                 save(NameStr, 'Struct');
                 t = toc;
            end
