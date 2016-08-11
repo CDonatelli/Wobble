@@ -50,7 +50,7 @@ FrameOut = im2bw(BlurredImage,Level);       %make image binary and invert it so 
 function Centers = FindMidPoint(FishImage,FishArc,Centers)
 
 i = 1;
-while (size(FishArc,1) > 1) && (i < 200)
+while (size(FishArc,1) > 1) && (i < 100)
     MidPoint = FishArc(floor(size(FishArc,1)/2),:);  %the midpoint
     Centers = [Centers;MidPoint];   %add the midpoint to the list
 

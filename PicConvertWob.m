@@ -30,4 +30,12 @@ for i = 1:length(PicNames)               % process images
 %     cd ..
 end
 
+%%% Auto Fix Pictures
+% [x, y, BW, xi, yi] = roipoly(FrameOut)
+% x = find(BW==1);
+% [m,n] = size(FrameOut);
+% idx = setdiff(1:(m*n), [x]);
+% Frame(idx) = 0;
+% imshow(Frame)
+
 end

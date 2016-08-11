@@ -1,27 +1,59 @@
-function [sOut] = imageInfo(struct)
-    sOut = struct;
+function [Struct] = imageInfoMod(Struct)
+    
+    disp('Select your color lateral view');
+    [cLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+    cLateral = imread(cLV);
+    Struct.cLateral = cLateral;
+    
+    disp('Select your color dorsal view');
+    [cDV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+    cDorsal= imread(cDV);
+    Struct.cDorsal = cDorsal;
+    
+    disp('Select your BW lateral view');
+    [bwLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+    bwLateral = imread(bwLV);
+    Struct.bwLateral = bwLateral;
+    
+    disp('Select your BW dorsal view');
+    [bwDV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+    bwDorsal= imread(bwDV);
+    Struct.bwDorsal = bwDorsal;
+    
+    disp('Set lateral scale');
+    imshow(cLateral);
+    [x,y] = getpts;
+    close
+    latScale = pdist([x,y],'euclidean')/10; %pixles/mm
+    Struct.latScale = latScale;
+    
+    disp('Set dorsal scale');
+    imshow(cDorsal);
+    [x,y] = getpts;
+    close
+    dorScale = pdist([x,y],'euclidean')/10; %pixles/mm
+    Struct.dorScale = dorScale;
+
     perc = [0.5,0.6,0.7,0.8,0.9];
-    LV = struct.lateralIm;
-    DV = struct.dorsalIm;
-    len = struct.fishLength;
-    sOut.tailPts = len.*perc;
-    twist = struct.twistPts./len;
-    tail = sOut.tailPts./len;
+    LV = Struct.bwLateral;
+    DV = Struct.bwDorsal;
     
     imshow(DV);
+    disp('Select nose and tail');
     Dpoints = ginput(2);
     close
     imshow(LV);
+    ('Select nose and tail');
     Lpoints = ginput(2);
     
-    sOut.dMid = ImageMidlineCol(DV);
-    sOut.dMid(1,:) = Dpoints(1,:); sOut.dMid(end,:) = Dpoints(2,:);
+    Struct.dMid = ImageMidlineCol(DV);
+    Struct.dMid(1,:) = Dpoints(1,:); Struct.dMid(end,:) = Dpoints(2,:);
     close all
-    sOut.lMid = ImageMidlineCol(LV);
-    if any(diff(sOut.lMid(:,1)) <= 0)
+    Struct.lMid = ImageMidlineCol(LV);
+    if any(diff(Struct.lMid(:,1)) <= 0)
         screwed = false; over = [];
-        for i = 2:length(sOut.lMid)
-            if sOut.lMid(i-1,1) > sOut.lMid(i,1)
+        for i = 2:length(Struct.lMid)
+            if Struct.lMid(i-1,1) > Struct.lMid(i,1)
                 screwed = true;
                 over = i-1;
                 break
@@ -29,55 +61,62 @@ function [sOut] = imageInfo(struct)
                 screwed = false;
             end
         end
-        sOut.lMid(over:end,:) = [];
+        Struct.lMid(over:end,:) = [];
     end
-    sOut.lMid(1,:) = Lpoints(1,:); sOut.lMid(end,:) = Lpoints(2,:);
+    Struct.lMid(1,:) = Lpoints(1,:); Struct.lMid(end,:) = Lpoints(2,:);
     close all
 
-    [sOut.dMidRes,Dd,Dfun] = interparc(20,sOut.dMid(:,1),sOut.dMid(:,2),'spline');
-    [sOut.lMidRes,Ld,Lfun] = interparc(20,sOut.lMid(:,1),sOut.lMid(:,2),'spline');
+    [Struct.dMidRes,Dd,Dfun] = interparc(20,Struct.dMid(:,1),Struct.dMid(:,2),'spline');
+    [Struct.lMidRes,Ld,Lfun] = interparc(20,Struct.lMid(:,1),Struct.lMid(:,2),'spline');
     
-    for j = 1:length(twist)
-        Dcordinate = Dfun(twist(j));
-        Lcordinate = Lfun(twist(j));
-        DX(j) = Dcordinate(1);
-        DY(j) = Dcordinate(2);
-        LX(j) = Lcordinate(1);
-        LY(j) = Lcordinate(2);
-    end
-    sOut.dImTwist = [sOut.dMidRes(1,:); 
-                          DX',DY';
-                     sOut.dMidRes(20,:)];
-    sOut.lImTwist = [sOut.lMidRes(1,:);
-                          LX',LY';
-                     sOut.lMidRes(20,:)];
+    [Struct.fishLength, segLength] = arclength(Struct.lMidRes(:,1),Struct.lMidRes(:,2));
+    Struct.fishLength = Struct.fishLength/latScale;
+    
+    len = Struct.fishLength;
+%     Struct.tailPts = len.*perc;
+%     twist = Struct.twistPts./len;
+%     tail = Struct.tailPts./len;
+%     for j = 1:length(twist)
+%         Dcordinate = Dfun(twist(j));
+%         Lcordinate = Lfun(twist(j));
+%         DX(j) = Dcordinate(1);
+%         DY(j) = Dcordinate(2);
+%         LX(j) = Lcordinate(1);
+%         LY(j) = Lcordinate(2);
+%     end
+%     Struct.dImTwist = [Struct.dMidRes(1,:); 
+%                           DX',DY';
+%                      Struct.dMidRes(20,:)];
+%     Struct.lImTwist = [Struct.lMidRes(1,:);
+%                           LX',LY';
+%                      Struct.lMidRes(20,:)];
     %redefine as empty just in case length(twist) > length(tail)
-    Dcordinate = []; Lcordinate = [];
-    DX = []; DY = []; LX = []; LY = [];
-    for j = 1:length(tail)
-        Dcordinate = Dfun(tail(j));
-        Lcordinate = Lfun(tail(j));
-        DX(j) = Dcordinate(1);
-        DY(j) = Dcordinate(2);
-        LX(j) = Lcordinate(1);
-        LY(j) = Lcordinate(2);
-    end    
-    sOut.dImTail = [sOut.dMidRes(1,:); 
-                          DX',DY';
-                     sOut.dMidRes(20,:)];
-    sOut.lImTail = [sOut.lMidRes(1,:);
-                          LX',LY';
-                     sOut.lMidRes(20,:)];
+%     Dcordinate = []; Lcordinate = [];
+%     DX = []; DY = []; LX = []; LY = [];
+%     for j = 1:length(tail)
+%         Dcordinate = Dfun(tail(j));
+%         Lcordinate = Lfun(tail(j));
+%         DX(j) = Dcordinate(1);
+%         DY(j) = Dcordinate(2);
+%         LX(j) = Lcordinate(1);
+%         LY(j) = Lcordinate(2);
+%     end    
+%     Struct.dImTail = [Struct.dMidRes(1,:); 
+%                           DX',DY';
+%                      Struct.dMidRes(20,:)];
+%     Struct.lImTail = [Struct.lMidRes(1,:);
+%                           LX',LY';
+%                      Struct.lMidRes(20,:)];
 
-    DDV  = imageDvals(sOut.dMidRes(:,1), sOut.dMidRes(:,2),DV);
-    LDV  = imageDvals(sOut.lMidRes(:,1), sOut.lMidRes(:,2),LV);
-    dTV  = imageDvals(sOut.dImTwist(:,1),sOut.dImTwist(:,2),DV);
-    lTV  = imageDvals(sOut.lImTwist(:,1),sOut.lImTwist(:,2),LV);
-    dTlV = imageDvals(sOut.dImTail(:,1),sOut.dImTail(:,2),DV);
-    lTlV = imageDvals(sOut.lImTail(:,1),sOut.lImTail(:,2),LV);
-    sOut.imDTwist = [dTV',lTV'];
-    sOut.imDTail  = [dTlV',lTlV'];
-    sOut.imD      = [DDV', LDV'];
+    DDV  = imageDvals(Struct.dMidRes(:,1), Struct.dMidRes(:,2),DV);
+    LDV  = imageDvals(Struct.lMidRes(:,1), Struct.lMidRes(:,2),LV);
+%     dTV  = imageDvals(Struct.dImTwist(:,1),Struct.dImTwist(:,2),DV);
+%     lTV  = imageDvals(Struct.lImTwist(:,1),Struct.lImTwist(:,2),LV);
+%     dTlV = imageDvals(Struct.dImTail(:,1),Struct.dImTail(:,2),DV);
+%     lTlV = imageDvals(Struct.lImTail(:,1),Struct.lImTail(:,2),LV);
+%     Struct.imDTwist = [dTV',lTV'];
+%     Struct.imDTail  = [dTlV',lTlV'];
+    Struct.imD      = [DDV'/dorScale, LDV'/latScale];
     
 
 function R = RadFind(Image,X,Y, level)
@@ -177,4 +216,3 @@ if size(FishArc,1)>1
     %plot(RawArc(:,1),RawArc(:,2),'r'); %debug to show the arc
     Centers = FindMidPoint(FishImage,FishArc,Centers, level);   %recursively look for midpoints
 end
-
