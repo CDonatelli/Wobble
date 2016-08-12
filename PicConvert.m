@@ -1,8 +1,6 @@
 function PicConvert()
 % script converts color images to black and white contour images
 %
-clear all
-close all
 disp('Hello!');
 disp('Please select the directory containing your photos');
 pause(1);
