@@ -1,7 +1,4 @@
-function [Struct] = imageInfoMod(fileName)
-    
-    Struct = load(fileName);
-    Struct = Struct.(fileName(1:end-4));
+function [Struct] = imageInfoMod(Struct)
     
     disp('Select your color lateral view');
     [cLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
@@ -121,7 +118,9 @@ function [Struct] = imageInfoMod(fileName)
 %     Struct.imDTail  = [dTlV',lTlV'];
     Struct.imD      = [DDV'/dorScale, LDV'/latScale];
     
-    save(fileName, 'Struct')
+    name = Struct.vid;
+    
+    save
     
 
 function R = RadFind(Image,X,Y, level)
