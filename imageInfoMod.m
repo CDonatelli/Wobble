@@ -1,7 +1,7 @@
 function [Struct] = imageInfoMod(fileName)
     
-    Struct = load(fileName);
-    Struct = Struct.(fileName(1:end-4));
+    %Struct = load(fileName);
+    %Struct = Struct.(fileName(1:end-4));
     
     disp('Select your color lateral view');
     [cLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});

@@ -54,7 +54,7 @@ function [Struct] = wobblePhase(Struct)
            twistPeaks = [twistPeaks,peaks];
            
            [p,k] = findpeaks(twistWobS(i,:));
-           twistWobPeaks = [twistWobPeaks,k',p];
+           twistWobPeaks = [twistWobPeaks,k,p];
         end
         
         

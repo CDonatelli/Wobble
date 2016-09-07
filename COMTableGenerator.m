@@ -40,6 +40,9 @@ function [] = COMTableGenerator(csvName)
    % Angles and Time
    for i = 1:length(list)
        NameStr = list(i).name;
+       Struct = load(NameStr);
+       Struct = Struct.Struct;
+       
        time = Struct.time;
        angle = Struct.TailAngleCorr';
        T2 = table(time,angle);

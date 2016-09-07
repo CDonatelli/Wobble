@@ -1,10 +1,10 @@
-function [] = midlineRestructure(struct)
+function [Struct] = midlineRestructure(Struct)
     Len = [];
-    for i = 1:length(struct.MidLine)
-        Len = [Len, length(struct.MidLine(i))];
+    for i = 1:length(Struct.MidLine)
+        Len = [Len, length(Struct.MidLine(i))];
     end
-    twist = struct.twistPts;
-    twist = twist./struct.fishlen;  % scale to fish length 
+    twist = Struct.twistPts;
+    twist = twist./Struct.fishlen;  % scale to fish length 
                                     % interparc funct needs values from 0-1
                                     % representing percentage down the
                                     % length of the spline (lame)
@@ -30,8 +30,8 @@ function [] = midlineRestructure(struct)
             twistPtCordsX(j,i) = cordinate(2);
         end
     end
-    struct.twistPtCordsX = twistPtCordsX;
-    struct.twistPtCordsY = twistPtCordsY;
+    Struct.twistPtCordsX = twistPtCordsX;
+    Struct.twistPtCordsY = twistPtCordsY;
     mids.MidMatX = x; mids.MidMatY = y;
     fr = 120;
     total = nfr/fr;
