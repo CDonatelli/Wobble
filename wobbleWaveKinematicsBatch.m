@@ -1,22 +1,22 @@
 function [time, errors] = wobbleWaveKinematicsBatch()
     time = [];
     errors = struct;
-    erorrs.start = 'empty';
+    errors.start = 'empty';
     list = dir('*.mat');
-    for i = 1:length(list)
+    for i = 2:length(list)
            t = [];  tic
        try
            NameStr = list(i).name;
            Struct = load(NameStr);
            Struct = Struct.Struct;
-           if isfield(Struct,'wobblwAmps') == 1
-                disp([NameStr, ' has already been analyzed.']);
-           else
+%            if isfield(Struct,'wobblwAmps') == 1
+%                 disp([NameStr, ' has already been analyzed.']);
+%            else
                 disp(NameStr);
                 Struct = wobbleWaveKinematics(Struct, NameStr);
                 save(NameStr, 'Struct');
                 t = toc;
-           end
+%            end
   
        catch err
            errors.(NameStr(1:8)) = getReport(err);

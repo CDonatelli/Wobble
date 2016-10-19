@@ -33,24 +33,37 @@ function [T, A] = wobblePhaseLag(csvName)
             Struct = Struct.Struct;
             phaseLagRaw = [];
             
-            bending = Struct.tailPeakT(:,5);
-            wobble = Struct.wobTailT(:,5);
-            wobAmp = Struct.wobTailPk(:,5);
-        
-            for k = 1:length(bending)-1    % look at peaks within one indiv
-                range = [bending(k), bending(k+1)];
-                inRange = find(wobble > range(1) & wobble < range(2));
-                if isempty(inRange)
-                    phaseLagRaw = [phaseLagRaw;NaN];
-                else
-                    timeRange = wobble(inRange);
-                    ampRange = wobAmp(inRange);
-                    [M, I] = max(ampRange);
-                    phaseLagRaw = [phaseLagRaw; timeRange(I) - range(1)];
+            bending = Struct.tailPeakT;
+            wobble = Struct.wobTailT;
+            wobAmp = Struct.wobTailPk;
+            medPhase = [];
+%             bending = Struct.tailPeakT(:,5);
+%             wobble = Struct.wobTailT(:,5);
+%             wobAmp = Struct.wobTailPk(:,5);
+            period = Struct.bendingPeriod;
+            for t = 1:5
+                [m,n] = size(bending);
+                bend = bending(:,t); wob = wobble(:,t); wAmp = wobAmp(:,t);
+%                 bend = bending; wob = wobble; wAmp = wobAmp;
+                phaseLagRaw = [];
+                for k = 1:m-1 %length(bending)-1   % look at peaks within one indiv
+                    % find time range of first two bending peaks
+                    range = [bend(k), bend(k+1)];
+                    % see if there are any wobble peaks in that range
+                    inRange = find(wob > range(1) & wob < range(2));
+                    if isempty(inRange)     % if there aren't, insert NaN
+                        phaseLagRaw = [phaseLagRaw;NaN];
+                    else                    % if there are, find the lag
+                        timeRange = wob(inRange);
+                        ampRange = wAmp(inRange);
+                        [M, I] = max(ampRange);
+                        phaseLagRaw = [phaseLagRaw; timeRange(I) - range(1)];
+                    end
                 end
+                medPhase = [medPhase,nanmedian(phaseLagRaw)/period]; % get the median of the lag
+%                 medPhase = nanmedian(phaseLagRaw)/period;
             end
             
-            medPhase = nanmedian(phaseLagRaw); % get the median of the lag
         end
         
         phaseLag = [phaseLag; medPhase];

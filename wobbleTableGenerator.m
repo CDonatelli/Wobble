@@ -6,6 +6,8 @@ function [T, A] = wobbleTableGenerator(csvName)
     T = [];
     SL = [];
     lambda = [];
+    WS = [];
+    slip = [];
     amplitude = [];
     wobF = [];
     wobT = [];
@@ -15,7 +17,7 @@ function [T, A] = wobbleTableGenerator(csvName)
     averageVerts = [];
     guageLength = [];
     RowNames = [];
-    for i = 1:length(list)
+    for i = 2:length(list)
         NameStr = list(i).name;
         Struct = load(NameStr);
         Struct = Struct.Struct;
@@ -25,6 +27,8 @@ function [T, A] = wobbleTableGenerator(csvName)
         T = [T; Struct.bendingPeriod];
         SL = [SL; Struct.bendingStrideLength];
         lambda = [lambda; Struct.wavelength];
+        WS = [WS; Struct.bendingWS];
+        slip = [slip; Struct.bendingSlip];
         amplitude = [amplitude; Struct.bendingAmp];
         wobF = [wobF; Struct.wobbleFrequency];
         wobT = [wobT; Struct.wobblePeriod];
@@ -41,6 +45,8 @@ function [T, A] = wobbleTableGenerator(csvName)
                 T, ...
                 SL, ...
                 lambda, ...
+                WS,...
+                slip,...
                 amplitude, ...
                 wobF, ...
                 wobT, ...
