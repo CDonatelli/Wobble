@@ -1,5 +1,6 @@
 function [] = wobblePofiles(colors)
     list = dir('*.mat');
+    list = list(2:end);
     Names = [];
     height = [];
     width = [];
