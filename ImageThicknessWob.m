@@ -1,10 +1,8 @@
-
 function Thickness = ImageThicknessWob(DataFile,ImageFile)
 % DataFile = input('What is the name of the data file? :');
 % ImageFile = input('What is the name of the image files? :');
 %Format = input('What is the format of the image? :');
 ImageName = [ImageFile];
-
     % Read in midline data from MidlineCust
     XF = DataFile(:,1); YF = DataFile(:,2);
     FI = imread(ImageName); Lev = graythresh(FI)*.75; FIb = im2bw(FI, Lev);

@@ -3,14 +3,15 @@ function [ name ] = CreateInitialFishStruct( nameString )
 name = struct;
 videos = input('How many videos?: ');
 currentFolder = pwd;
-% directory = uigetdir();
-cd('E:\FHL2015\Pictures\Best Trial Pictures\BWpics');
-dImName = uigetfile('.','Select the Dorsal Image');
+disp('Select the directory with your images')
+directory = uigetdir();
+cd(directory);
+dImName = uigetfile('*.png','Select the Dorsal Image');
 name.dorsalIm = imread(dImName);
-lImName = uigetfile('.','Select the Lateral Image');
+lImName = uigetfile('*.png','Select the Lateral Image');
 name.lateralIm = imread(lImName);
 name.fishLength = input('What is the length of the fish?: ');
-name.twistPts = input('Enter the twisting points ([paste]): ');
+%name.twistPts = input('Enter the twisting points ([paste]): ');
 cd(currentFolder);
 
 name = imageInfo(name);

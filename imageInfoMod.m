@@ -1,45 +1,48 @@
 function [Struct] = imageInfoMod(fileName)
     
-    %Struct = load(fileName);
+    Struct = fileName;
     %Struct = Struct.(fileName(1:end-4));
     
-    disp('Select your color lateral view');
-    [cLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
-    cLateral = imread(cLV);
-    Struct.cLateral = cLateral;
+%     disp('Select your color lateral view');
+%     [cLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+%     cLateral = imread(cLV);
+%     Struct.cLateral = cLateral;
+%     
+%     disp('Select your color dorsal view');
+%     [cDV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+%     cDorsal= imread(cDV);
+%     Struct.cDorsal = cDorsal;
+%     
+%     disp('Select your BW lateral view');
+%     [bwLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+%     bwLateral = imread(bwLV);
+%     Struct.bwLateral = bwLateral;
+%     
+%     disp('Select your BW dorsal view');
+%     [bwDV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
+%     bwDorsal= imread(bwDV);
+%     Struct.bwDorsal = bwDorsal;
     
-    disp('Select your color dorsal view');
-    [cDV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
-    cDorsal= imread(cDV);
-    Struct.cDorsal = cDorsal;
-    
-    disp('Select your BW lateral view');
-    [bwLV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
-    bwLateral = imread(bwLV);
-    Struct.bwLateral = bwLateral;
-    
-    disp('Select your BW dorsal view');
-    [bwDV] = uigetfile({'*.jpg';'*.png';'*.bmp'});
-    bwDorsal= imread(bwDV);
-    Struct.bwDorsal = bwDorsal;
+    bwLateral = Struct.lateralIm;
+    bwDorsal = Struct.dorsalIm;
     
     disp('Set lateral scale');
-    imshow(cLateral);
+    imshow(bwLateral);
     [x,y] = getpts;
     close
     latScale = pdist([x,y],'euclidean')/10; %pixles/mm
     Struct.latScale = latScale;
     
     disp('Set dorsal scale');
-    imshow(cDorsal);
+    imshow(bwDorsal);
     [x,y] = getpts;
     close
     dorScale = pdist([x,y],'euclidean')/10; %pixles/mm
     Struct.dorScale = dorScale;
 
     perc = [0.5,0.6,0.7,0.8,0.9];
-    LV = Struct.bwLateral;
-    DV = Struct.bwDorsal;
+    LV = Struct.lateralIm;
+    DV = Struct.dorsalIm;
     
     imshow(DV);
     disp('Select nose and tail');
@@ -70,7 +73,7 @@ function [Struct] = imageInfoMod(fileName)
     close all
 
     [Struct.dMidRes,Dd,Dfun] = interparc(20,Struct.dMid(:,1),Struct.dMid(:,2),'spline');
-    [Struct.lMidRes,Ld,Lfun] = interparc(20,Struct.lMid(:,1),Struct.lMid(:,2),'spline');
+    [Struct.lMidRes,Ld,Lfun] = interparc(20,Struct.lMid(:,1),Struct.lMid(:,2),'linear');
     
     [Struct.fishLength, segLength] = arclength(Struct.lMidRes(:,1),Struct.lMidRes(:,2));
     Struct.fishLength = Struct.fishLength/latScale;

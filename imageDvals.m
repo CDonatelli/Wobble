@@ -1,19 +1,17 @@
-
 function Dvals = imageDvals(XF, YF,ImageFile)
+    figure
     DFi = ImageFile;
-%     XF = DataFile(:,1); YF = DataFile(:,2);
-%     FI = imread(ImageName); Lev = graythresh(FI)*.75; FIb = im2bw(FI, Lev);
     DFi = im2bw(DFi);    % convert image file to double
     imshow(DFi); hold on % show the image
-    plot(XF,YF,'b*');     % plot the midline
+    plot(XF,YF,'b*');    % plot the midline
     for j = 2: length(XF)
-        % create a new array of X's in order to create a line perpendicular
-        % to the midline at the jth point
+    % create a new array of X's in order to create a line perpendicular
+    % to the midline at the jth point
         Xup = XF(j)+50; Xend = XF(j)-50; Xs = Xend:0.05:Xup;
-        % calculate the slope of the midline from j-1 to j
+    % calculate the slope of the midline from j-1 to j
         M =(YF(j-1)-YF(j))/(XF(j-1)-XF(j));
         B = YF(j) - XF(j)*(1/(-M)); % calculate B of the perpendicular line
-        if abs(M) <= (0.05)  % if slope is close to 0 make it 0
+        if abs(M) <= (0.05)         % if slope is close to 0 make it 0
             M = 0;
         end
         if M == 0            % if the slope is zero, create a vertical line
@@ -23,7 +21,6 @@ function Dvals = imageDvals(XF, YF,ImageFile)
             perpY = (1/(-M))*Xs + B; % set of Y's for perpendicular line
         end
         plot(Xs,perpY,'r');          % plot the perpendicular line
-%        plot(Xs,perpY,'r*');   % debug, make sure it's getting enough pts
         big = [];                    % create an empty array to 
         [xx,yy] = size(DFi);         % get size of the image                 
         for p = 1:length(Xs)                   

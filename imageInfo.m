@@ -4,9 +4,9 @@ function [sOut] = imageInfo(struct)
     LV = struct.lateralIm;
     DV = struct.dorsalIm;
     len = struct.fishLength;
-    sOut.tailPts = len.*perc;
-    twist = struct.twistPts./len;
-    tail = sOut.tailPts./len;
+    %sOut.tailPts = len.*perc;
+    %twist = struct.twistPts./len;
+    %tail = sOut.tailPts./len;
     
     imshow(DV);
     Dpoints = ginput(2);
@@ -14,70 +14,77 @@ function [sOut] = imageInfo(struct)
     imshow(LV);
     Lpoints = ginput(2);
     
-    sOut.dMid = ImageMidlineCol(DV);
+    sOut.dMid = ImageMidlineWob(DV);
     sOut.dMid(1,:) = Dpoints(1,:); sOut.dMid(end,:) = Dpoints(2,:);
     close all
-    sOut.lMid = ImageMidlineCol(LV);
-    if any(diff(sOut.lMid(:,1)) <= 0)
-        screwed = false; over = [];
-        for i = 2:length(sOut.lMid)
-            if sOut.lMid(i-1,1) > sOut.lMid(i,1)
-                screwed = true;
-                over = i-1;
-                break
+    sOut.lMid = ImageMidlineWob(LV);
+    lsigns = diff(sOut.lMid(:,1));
+    lsigns = sign(lsigns);
+    firstChange = 0;
+        for index = 2:length(lsigns)
+            if lsigns(index-1) == lsigns(index)
+                firstChange = 0;
             else
-                screwed = false;
+                firstChange = 1;
+                break
             end
         end
-        sOut.lMid(over:end,:) = [];
-    end
+    sOut.lMid = sOut.lMid(1:index,:);
+    
     sOut.lMid(1,:) = Lpoints(1,:); sOut.lMid(end,:) = Lpoints(2,:);
     close all
 
     [sOut.dMidRes,Dd,Dfun] = interparc(20,sOut.dMid(:,1),sOut.dMid(:,2),'spline');
     [sOut.lMidRes,Ld,Lfun] = interparc(20,sOut.lMid(:,1),sOut.lMid(:,2),'spline');
     
-    for j = 1:length(twist)
-        Dcordinate = Dfun(twist(j));
-        Lcordinate = Lfun(twist(j));
-        DX(j) = Dcordinate(1);
-        DY(j) = Dcordinate(2);
-        LX(j) = Lcordinate(1);
-        LY(j) = Lcordinate(2);
-    end
-    sOut.dImTwist = [sOut.dMidRes(1,:); 
-                          DX',DY';
-                     sOut.dMidRes(20,:)];
-    sOut.lImTwist = [sOut.lMidRes(1,:);
-                          LX',LY';
-                     sOut.lMidRes(20,:)];
+    [dlength, seglength] = arclength(sOut.dMidRes(:,1),sOut.dMidRes(:,2),'spline');
+    [llength, seglength] = arclength(sOut.lMidRes(:,1),sOut.lMidRes(:,2),'spline');
+    
+    sOut.dImScale = len/dlength;
+    sOut.lImScale = len/llength;
+    
+%     for j = 1:length(twist)
+%         Dcordinate = Dfun(twist(j));
+%         Lcordinate = Lfun(twist(j));
+%         DX(j) = Dcordinate(1);
+%         DY(j) = Dcordinate(2);
+%         LX(j) = Lcordinate(1);
+%         LY(j) = Lcordinate(2);
+%     end
+%     sOut.dImTwist = [sOut.dMidRes(1,:); 
+%                           DX',DY';
+%                      sOut.dMidRes(20,:)];
+%     sOut.lImTwist = [sOut.lMidRes(1,:);
+%                           LX',LY';
+%                      sOut.lMidRes(20,:)];
     %redefine as empty just in case length(twist) > length(tail)
-    Dcordinate = []; Lcordinate = [];
-    DX = []; DY = []; LX = []; LY = [];
-    for j = 1:length(tail)
-        Dcordinate = Dfun(tail(j));
-        Lcordinate = Lfun(tail(j));
-        DX(j) = Dcordinate(1);
-        DY(j) = Dcordinate(2);
-        LX(j) = Lcordinate(1);
-        LY(j) = Lcordinate(2);
-    end    
-    sOut.dImTail = [sOut.dMidRes(1,:); 
-                          DX',DY';
-                     sOut.dMidRes(20,:)];
-    sOut.lImTail = [sOut.lMidRes(1,:);
-                          LX',LY';
-                     sOut.lMidRes(20,:)];
+%     Dcordinate = []; Lcordinate = [];
+%     DX = []; DY = []; LX = []; LY = [];
+%     for j = 1:length(tail)
+%         Dcordinate = Dfun(tail(j));
+%         Lcordinate = Lfun(tail(j));
+%         DX(j) = Dcordinate(1);
+%         DY(j) = Dcordinate(2);
+%         LX(j) = Lcordinate(1);
+%         LY(j) = Lcordinate(2);
+%     end    
+%     sOut.dImTail = [sOut.dMidRes(1,:); 
+%                           DX',DY';
+%                      sOut.dMidRes(20,:)];
+%     sOut.lImTail = [sOut.lMidRes(1,:);
+%                           LX',LY';
+%                      sOut.lMidRes(20,:)];
 
     DDV  = imageDvals(sOut.dMidRes(:,1), sOut.dMidRes(:,2),DV);
     LDV  = imageDvals(sOut.lMidRes(:,1), sOut.lMidRes(:,2),LV);
-    dTV  = imageDvals(sOut.dImTwist(:,1),sOut.dImTwist(:,2),DV);
-    lTV  = imageDvals(sOut.lImTwist(:,1),sOut.lImTwist(:,2),LV);
-    dTlV = imageDvals(sOut.dImTail(:,1),sOut.dImTail(:,2),DV);
-    lTlV = imageDvals(sOut.lImTail(:,1),sOut.lImTail(:,2),LV);
-    sOut.imDTwist = [dTV',lTV'];
-    sOut.imDTail  = [dTlV',lTlV'];
-    sOut.imD      = [DDV', LDV'];
+%     dTV  = imageDvals(sOut.dImTwist(:,1),sOut.dImTwist(:,2),DV);
+%     lTV  = imageDvals(sOut.lImTwist(:,1),sOut.lImTwist(:,2),LV);
+%     dTlV = imageDvals(sOut.dImTail(:,1),sOut.dImTail(:,2),DV);
+%     lTlV = imageDvals(sOut.lImTail(:,1),sOut.lImTail(:,2),LV);
+%     sOut.imDTwist = [dTV',lTV'];
+%     sOut.imDTail  = [dTlV',lTlV'];
+    sOut.imDScaled   = [(DDV.*sOut.dImScale)', (LDV.*sOut.lImScale)'];
+    sOut.imDRaw      = [DDV', LDV'];
     
 
 function R = RadFind(Image,X,Y, level)
